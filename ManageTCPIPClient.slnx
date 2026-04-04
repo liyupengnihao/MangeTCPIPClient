@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ManageTCPIPClient.vcxproj" Id="564f47bc-9d82-4468-be3e-0b34a0a31492" />
+</Solution>
