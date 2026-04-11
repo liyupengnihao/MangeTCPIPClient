@@ -9,5 +9,15 @@
 
 // 添加要在此处预编译的标头
 #include "framework.h"
-
+#include <cstring>
+#include <sstream>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <functional>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include <mutex>
+#include <stdbool.h>
 #endif //PCH_H
