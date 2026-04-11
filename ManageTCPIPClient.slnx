@@ -1,7 +1,9 @@
 <Solution>
   <Configurations>
+    <Platform Name="Any CPU" />
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
   <Project Path="ManageTCPIPClient.vcxproj" Id="564f47bc-9d82-4468-be3e-0b34a0a31492" />
+  <Project Path="TestC++DLL/TestC++DLL.csproj" Id="af09d505-823c-4124-ab0f-ef5f573c52df" />
 </Solution>
