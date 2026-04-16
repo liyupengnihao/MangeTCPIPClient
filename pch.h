@@ -20,4 +20,7 @@
 #include <memory>
 #include <mutex>
 #include <stdbool.h>
+#ifdef _WIN32
+#pragma comment(lib, "ws2_32.lib")
+#endif
 #endif //PCH_H
