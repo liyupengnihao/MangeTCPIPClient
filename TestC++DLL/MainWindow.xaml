@@ -7,6 +7,25 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name = "ManagerCorrelation" Height="*"></RowDefinition>
+            <!--管理相关-->
+            <RowDefinition x:Name = "ClientCorrelation" Height="2*"></RowDefinition>
+            <!--客户端相关-->
+            <RowDefinition x:Name = "MessageCorrelation" Height="2*"></RowDefinition>
+            <!--读写相关-->
+        </Grid.RowDefinitions>
 
+        <StackPanel Grid.Row ="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="创建管理" Height="40" Width="100" Margin="0,0,200,0"></Button>
+            <Button Content="销毁管理" Height="40" Width="100"></Button>
+        </StackPanel>
+
+        <UniformGrid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Columns="4"><!--4列左到右，上到下顺序-->
+            <Button Content="添加客户端对象" Margin="20,0,20,0"></Button>
+            <Button Content="移除客户端对象" Margin="20,0,20,0"></Button>
+            <Button Content="设置接收超时时间" Margin="20,0,20,0"></Button>
+            <TextBox Width="100" Margin="20,0,20,0"></TextBox>
+        </UniformGrid>
     </Grid>
 </Window>
