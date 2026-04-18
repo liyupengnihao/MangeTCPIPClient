@@ -191,53 +191,53 @@ int ClientManager::RecvData(const string& id, char* buf, int bufLen)
 
 #pragma region 纯C导出函数实现
 
-EXPORT_API void* CALL_CONV CreateManager()
+ManageTCPIPClient_API void* CALL_CONV CreateManager()
 {
 	return new ClientManager();
 }
 
-EXPORT_API void CALL_CONV DestroyManager(void* manager)
+ManageTCPIPClient_API void CALL_CONV DestroyManager(void* manager)
 {
 	ClientManager* mgr = static_cast<ClientManager*>(manager);
 	mgr->~ClientManager();
 }
 
-EXPORT_API bool CALL_CONV CreateClient(void* manager, const char* clientId)
+ManageTCPIPClient_API int CALL_CONV CreateClient(void* manager, const char* clientId)
 {//外部传入键
 	auto* mgr = static_cast<ClientManager*>(manager);
-	return mgr->CreateClient(clientId);//char*->std::string可以隐式，反向不行
+	return mgr->CreateClient(clientId) ? 0 : -1;//char*->std::string可以隐式，反向不行
 }
 
-EXPORT_API bool CALL_CONV DestroyClient(void* manager, const char* clientId)
+ManageTCPIPClient_API int CALL_CONV DestroyClient(void* manager, const char* clientId)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);//static_cast编译判断manager是ClientManager或ClientManager的父类
-	return mgr->DestroyClient(clientId);
+	return mgr->DestroyClient(clientId) ? 0 : -1;
 }
 
-EXPORT_API bool CALL_CONV ConnectClient(void* manager, const char* clientId, const char* ip, int port)
+ManageTCPIPClient_API int CALL_CONV ConnectClient(void* manager, const char* clientId, const char* ip, int port)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);
 	auto* client = mgr->GetClient(clientId);
 
-	if (client) return client->Connect(ip, port);
-	return false;
+	if (client) return client->Connect(ip, port) ? 0 : -1;
+	return -1;
 }
 
-EXPORT_API bool CALL_CONV IsClientConnected(void* manager, const char* clientId)
+ManageTCPIPClient_API int CALL_CONV IsClientConnected(void* manager, const char* clientId)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);
 	auto* client = mgr->GetClient(clientId);
-	return client ? client->IsConnected() : false;
+	return client ? (client->IsConnected() ? 0 : -1 ): -2;//加不加括号都是一个意思
 }
 
-EXPORT_API void CALL_CONV DisconnectClient(void* manager, const char* clientId)
+ManageTCPIPClient_API void CALL_CONV DisconnectClient(void* manager, const char* clientId)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);
 	auto* client = mgr->GetClient(clientId);
 	if (client) client->Disconnect();
 }
 
-EXPORT_API bool CALL_CONV SendData(void* manager, const char* clientId, const char* data, int len)
+ManageTCPIPClient_API int CALL_CONV SendData(void* manager, const char* clientId, const char* data, int len)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);
 	auto* client = mgr->GetClient(clientId);
@@ -246,11 +246,11 @@ EXPORT_API bool CALL_CONV SendData(void* manager, const char* clientId, const ch
 	{
 		rel = client->Send(data, len);
 	}
-	return rel ? true : false;
-		
+	return rel;
+
 }
 
-EXPORT_API int CALL_CONV RecvData(void* manager, const char* clientId, char* buf, int bufLen)
+ManageTCPIPClient_API int CALL_CONV RecvData(void* manager, const char* clientId, char* buf, int bufLen)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);
 	auto* client = mgr->GetClient(clientId);
@@ -260,7 +260,7 @@ EXPORT_API int CALL_CONV RecvData(void* manager, const char* clientId, char* buf
 	}
 }
 
-EXPORT_API int CALL_CONV SetReceiveTimeout(void* manager, const char* clientId, int timeout)
+ManageTCPIPClient_API int CALL_CONV SetReceiveTimeout(void* manager, const char* clientId, int timeout)
 {
 	auto* mgr = static_cast<ClientManager*>(manager);
 	auto* client = mgr->GetClient(clientId);
