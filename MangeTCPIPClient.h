@@ -11,6 +11,10 @@
 
 #define FUNC_OK     0//对外导出函数0代表正常
 
+/// <summary>
+/// 回调函数指针：数据、长度、用户参数(数据处理回调)
+/// </summary>
+typedef void(__stdcall* TCP_RECV_CALLBASCK)(const char* data, int len, void* userParam);
 
 //  纯 C 接口导出（C# 和 C++ 都能用）//所有bool改int，0成功其他值代表其他
 extern "C" {//返回bool,C++为1字节，C#4字节，可以返回int，或特征[return: MarshalAs(UnmanagedType.I1)](强制把这个布尔值当作 1 个字节的整数来处理)

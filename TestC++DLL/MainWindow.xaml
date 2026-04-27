@@ -8,12 +8,12 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition x:Name = "ManagerCorrelation" Height="*"></RowDefinition>
             <!--管理相关-->
-            <RowDefinition x:Name = "ClientCorrelation" Height="2*"></RowDefinition>
+            <RowDefinition x:Name = "ManagerCorrelation" Height="*"></RowDefinition>
             <!--客户端相关-->
-            <RowDefinition x:Name = "MessageCorrelation" Height="2*"></RowDefinition>
+            <RowDefinition x:Name = "ClientCorrelation" Height="3*"></RowDefinition>
             <!--读写相关-->
+            <RowDefinition x:Name = "MessageCorrelation" Height="3*"></RowDefinition>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row ="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -21,11 +21,44 @@
             <Button Content="销毁管理" Height="40" Width="100"></Button>
         </StackPanel>
 
-        <UniformGrid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Columns="4"><!--4列左到右，上到下顺序-->
-            <Button Content="添加客户端对象" Margin="20,0,20,0"></Button>
-            <Button Content="移除客户端对象" Margin="20,0,20,0"></Button>
-            <Button Content="设置接收超时时间" Margin="20,0,20,0"></Button>
-            <TextBox Width="100" Margin="20,0,20,0"></TextBox>
-        </UniformGrid>
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <UniformGrid  HorizontalAlignment="Center" VerticalAlignment="Center" Columns="4" Margin="0,15,0,0">
+                <!--4列左到右，上到下顺序-->
+                <Button Content="添加客户端对象" Height="40" Width="100" Margin="20,0,20,0"></Button>
+                <TextBlock Text="客户端名称：" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBox Height="40" Width="100" Margin="20,0,20,0"></TextBox>
+                <Button Content="移除客户端对象" Height="40" Width="100" Margin="20,0,20,0"></Button>
+                <!--<Button Content="设置接收超时时间" Height="40" Width="100" Margin="20,0,20,0"></Button>
+    <TextBox Height="40" Width="100" Margin="20,0,20,0"></TextBox>-->
+            </UniformGrid>
+            <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Center" Columns="4" Margin="0,15,0,0">
+                <TextBlock Text="IP地址：" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBox Height="40" Width="100" Margin="20,0,20,0"></TextBox>
+                <TextBlock Text="端口号：" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBox Height="40" Width="100" Margin="20,0,20,0"></TextBox>
+            </UniformGrid>
+            <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Center" Columns="2" Margin="0,15,0,0">
+                <Button Height="40" Width="100" Content="连接服务器" Margin="0,0,100,0"></Button>
+                <Button Height="40" Width="100" Content="断连服务器" Margin="100,0,0,0"></Button>
+            </UniformGrid>
+        </StackPanel>
+
+        <DockPanel Grid.Row="2" VerticalAlignment="Stretch" Margin="0,10,0,0">
+            <!-- 先放按钮栏，DockPanel 会自动让剩下区域填满 txtLog -->
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+                <TextBlock Text="发送的内容：" VerticalAlignment="Center"/>
+                <TextBox Height="40" Width="100" Margin="5"/>
+                <Button Content="发送" Height="40" Width="100" Margin="5"/>
+                <Button Content="单次接收" Height="40" Width="100" Margin="5"/>
+            </StackPanel>
+            <!-- 这个日志框会 自动占满下方所有剩余空间！-->
+            <TextBox x:Name="txtLog"
+             IsReadOnly="True"
+             VerticalScrollBarVisibility="Auto"
+             HorizontalScrollBarVisibility="Auto"
+             TextWrapping="Wrap"
+             Background="#FFF0F0F0"/>
+        </DockPanel>
+
     </Grid>
 </Window>
