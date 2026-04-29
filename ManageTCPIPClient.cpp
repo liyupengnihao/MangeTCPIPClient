@@ -249,7 +249,7 @@ int ClientManagerBase::RecvData(const string& id, char* buf, int bufLen)
 }
 
 
-#pragma region 纯C导出函数实现
+#pragma region 纯C导出函数实现，给VC++和C#调用的
 
 ManageTCPIPClient_API void* CALL_CONV CreateManager()
 {
