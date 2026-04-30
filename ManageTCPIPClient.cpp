@@ -65,7 +65,7 @@ public:
 	/// <returns>0连接，-1连接失败</returns>
 	int IsConnected() const;//不修改任何成员变量
 protected:
-	virtual bool OnConnect(const string& ip, int port);
+	virtual bool OnConnect(const string& ip, int port);//导出动态库，诺导出有虚函数就必须导出整个类。不导出虚函数必须有实现。纯虚不能new TCPClientBase。还是空实现吧
 	virtual void OnDisconnect();
 	virtual int OnSetReceiveTimeout(int timeout);
 	virtual int OnSend(const char* data, int len);
@@ -171,6 +171,12 @@ int TCPClientBase::Disconnect()
 	return 0;
 }
 
+int TCPClientBase::SetReceiveTimeout(int timeout)
+{
+	if (!m_connected || m_socket == INVALID_SOCKET) return -1;
+	return setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+}
+
 int TCPClientBase::Send(const char* data, int len)
 {
 	if (!m_connected || m_socket == INVALID_SOCKET) return -1;
@@ -188,11 +194,36 @@ int TCPClientBase::IsConnected() const
 	return m_connected ? 0 : -1;
 }
 
-int TCPClientBase::SetReceiveTimeout(int timeout)
+#pragma region TCPClientBase虚函数默认实现
+bool TCPClientBase::OnConnect(const string& ip, int port)
 {
-	if (!m_connected || m_socket == INVALID_SOCKET) return -1;
-	return setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+	return false;
 }
+
+void TCPClientBase::OnDisconnect()
+{
+
+}
+
+int TCPClientBase::OnSetReceiveTimeout(int timeout)
+{
+	return -1;
+}
+
+int TCPClientBase::OnSend(const char* data, int len)
+{
+	return -1;
+}
+
+int TCPClientBase::OnReceive(char* buf, int bufLen)
+{
+	return -1;
+}
+bool TCPClientBase::OnIsConnected() const
+{
+	return m_connected;
+}
+#pragma endregion
 
 ClientManagerBase::~ClientManagerBase()
 {//释放m_clients资源
@@ -214,14 +245,6 @@ bool ClientManagerBase::DestroyClient(const string& id)
 	if (it == m_clients.end()) return false;
 	m_clients.erase(it);//删除哈希表键值
 	return true;
-}
-
-TCPClientBase* ClientManagerBase::GetClient(const string& id)
-{
-	std::lock_guard<std::mutex> lock(m_mutex);
-	auto it = m_clients.find(id);
-	if (it == m_clients.end()) return nullptr;
-	return it->second.get();//得到值，TCPClient对象
 }
 
 bool ClientManagerBase::ConnectClient(const string& id, const string& ip, int port)
@@ -248,8 +271,43 @@ int ClientManagerBase::RecvData(const string& id, char* buf, int bufLen)
 	return c->Receive(buf, bufLen);
 }
 
+TCPClientBase* ClientManagerBase::GetClient(const string& id)
+{
+	std::lock_guard<std::mutex> lock(m_mutex);
+	auto it = m_clients.find(id);
+	if (it == m_clients.end()) return nullptr;
+	return it->second.get();//得到值，TCPClient对象
+}
 
-#pragma region 纯C导出函数实现，给VC++和C#调用的
+#pragma region ClientManagerBase虚函数默认实现
+bool ClientManagerBase::OnCreateClient(string idx)
+{
+	return false;
+}
+
+bool ClientManagerBase::OnDestroyClient(const string& clientId)
+{
+	return false;
+}
+
+bool ClientManagerBase::OnConnectClient(const string& clientId, const string& ip, int port)
+{
+	return false;
+}
+
+bool ClientManagerBase::OnSendData(const string& clientId, const char* data, int len, int& bytesSent)
+{
+	return false;
+}
+
+int ClientManagerBase::OnRecvData(const string& clientId, char* buf, int bufLen)
+{
+	return -1;
+}
+#pragma endregion
+
+
+//#pragma region 纯C导出函数实现，给VC++和C#调用的
 
 ManageTCPIPClient_API void* CALL_CONV CreateManager()
 {
@@ -327,4 +385,4 @@ ManageTCPIPClient_API int CALL_CONV SetReceiveTimeout(void* manager, const char*
 	if (client) return client->SetReceiveTimeout(timeout);
 	return -2;
 }
-#pragma endregion
+//#pragma endregion

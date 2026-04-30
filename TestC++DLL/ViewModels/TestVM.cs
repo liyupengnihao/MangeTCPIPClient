@@ -18,6 +18,14 @@ namespace TestC__DLL.ViewModels
 
         }
         /// <summary>
+        /// 控件是否可用
+        /// </summary>
+        /// <returns>返回true代表可用，false代表不可用</returns>
+        private bool CanCreateManager()
+        {
+            return true;
+        }
+        /// <summary>
         /// 销毁管理
         /// </summary>
         [RelayCommand]

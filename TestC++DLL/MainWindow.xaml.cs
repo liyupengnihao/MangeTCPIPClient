@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestC__DLL.ViewModels;//引入TestCVM
 
 namespace TestC__DLL
 {
@@ -19,6 +20,7 @@ namespace TestC__DLL
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new TestCVM();
         }
     }
 }
