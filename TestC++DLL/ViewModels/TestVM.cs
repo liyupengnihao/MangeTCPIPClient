@@ -5,6 +5,8 @@ using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;//内部包含ObservableObject类
 using CommunityToolkit.Mvvm.Input;//内部包含RelayCommand特性
 
+using TestC__DLL.C__DLLClass;//包含MangeTcpClientDllExport类,C++纯C导出的函数封装
+
 namespace TestC__DLL.ViewModels
 {
     public partial class TestCVM : ObservableObject
@@ -15,7 +17,7 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void CreateManager()
         {
-
+            MangeTcpClientDllExport.INVALID_HANDLE = MangeTcpClientDllExport.CreateManager();
         }
         /// <summary>
         /// 控件是否可用
@@ -31,7 +33,7 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void DestroyManager()
         {
-
+            MangeTcpClientDllExport.DestroyManager(MangeTcpClientDllExport.INVALID_HANDLE);
         }
         /// <summary>
         /// 添加客户端对象
@@ -39,7 +41,7 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void AddClient()
         {
-
+            MangeTcpClientDllExport.CreateClient(MangeTcpClientDllExport.INVALID_HANDLE, _clientName);
         }
         /// <summary>
         /// 客户端名称
