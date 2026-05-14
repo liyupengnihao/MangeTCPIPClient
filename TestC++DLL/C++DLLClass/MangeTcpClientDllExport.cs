@@ -94,7 +94,7 @@ namespace TestC__DLL.C__DLLClass
         /// <param name="data"></param>
         /// <param name="len"></param>
         /// <returns></returns>
-        [DllImport(DllPath, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        [DllImport(DllPath, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]//CharSet影响string
         public static extern int SendData(IntPtr manager, string clientId, byte[] data, int len);
 
         /// <summary>

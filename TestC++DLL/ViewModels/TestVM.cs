@@ -1,10 +1,8 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;//内部包含ObservableObject类
+using CommunityToolkit.Mvvm.Input;//内部包含RelayCommand特性
+using System;
 using System.Collections.Generic;
 using System.Text;
-
-using CommunityToolkit.Mvvm.ComponentModel;//内部包含ObservableObject类
-using CommunityToolkit.Mvvm.Input;//内部包含RelayCommand特性
-
 using TestC__DLL.C__DLLClass;//包含MangeTcpClientDllExport类,C++纯C导出的函数封装
 
 namespace TestC__DLL.ViewModels
@@ -55,7 +53,7 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void RemoveClient()
         {
-
+            MangeTcpClientDllExport.DestroyClient(MangeTcpClientDllExport.INVALID_HANDLE, _clientName);
         }
         /// <summary>
         /// 服务器IP
@@ -73,7 +71,7 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void ConnectServer()
         {
-
+            MangeTcpClientDllExport.ConnectClient(MangeTcpClientDllExport.INVALID_HANDLE, _clientName, _serverIP, Convert.ToInt32(_serverPort));
         }
         /// <summary>
         /// 断连服务器
@@ -81,7 +79,7 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void DisconnectServer()
         {
-
+            MangeTcpClientDllExport.DisconnectClient(MangeTcpClientDllExport.INVALID_HANDLE, _clientName);
         }
         /// <summary>
         /// 数据内容
@@ -94,7 +92,11 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void SendData()
         {
-
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(_dataPack);
+            Console.WriteLine($"UTF-8: {BitConverter.ToString(utf8Bytes)}");
+            MangeTcpClientDllExport.SendData(MangeTcpClientDllExport.INVALID_HANDLE, _clientName, utf8Bytes, utf8Bytes.Length);
+            DateTime now = DateTime.Now;
+            LogInfo += $"\r\n{now.ToString("yyyy-MM-dd HH:mm:ss")}\t发送的数据:{_dataPack}";//使用_logInfo不会触发通知UI
         }
         /// <summary>
         /// 单次接收
@@ -102,7 +104,10 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void SingleReceiveData()
         {
-
+            byte[] buf = new byte[4096];
+            int bytesCount = MangeTcpClientDllExport.RecvData(MangeTcpClientDllExport.INVALID_HANDLE, _clientName, buf, buf.Length);
+            DateTime now = DateTime.Now;
+            LogInfo += $"\r\n{now.ToString("yyyy-MM-dd HH:mm:ss")}\t接收的数据:{Encoding.UTF8.GetString(buf,0, bytesCount)}";
         }
         /// <summary>
         /// 打印日志
