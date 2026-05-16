@@ -71,7 +71,8 @@ namespace TestC__DLL.ViewModels
         [RelayCommand]
         private void ConnectServer()
         {
-            MangeTcpClientDllExport.ConnectClient(MangeTcpClientDllExport.INVALID_HANDLE, _clientName, _serverIP, Convert.ToInt32(_serverPort));
+            int ret = MangeTcpClientDllExport.ConnectClient(MangeTcpClientDllExport.INVALID_HANDLE, _clientName, _serverIP, Convert.ToInt32(_serverPort));
+            if (ret == -1) LogInfo += $"\r\n连接失败";
         }
         /// <summary>
         /// 断连服务器
